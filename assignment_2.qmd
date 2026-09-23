@@ -45,6 +45,18 @@ college_selected
 I used the select() function from the tidyverse to keep only the INSTNM, SAT_AVG, and ADM_RATE variables from the dataset. The resulting dataset contains only these three columns.
 
 - Task 4: Create a scatterplot for SAT_AVG and ADM_RATE (Remove NA)
+```{r}
+college_selected %>%
+  drop_na(SAT_AVG, ADM_RATE) %>%
+  ggplot(aes(x = SAT_AVG, y = ADM_RATE)) + 
+  geom_point() + 
+  labs(
+    x = "Average SAT Score",
+    y = "Admission Rate",
+    title = "Average SAT Score vs. Admission Rate"
+  )
+```
+I first removed rows with missing values for SAT_AVG or ADM_RATE using drop_na(). I then used ggplot() and geom_point to create a scatterplot, with average SAT score on the x-axis and admission rate on the y-axis. The plot allows us to see the relationship between these two variables.
 
 ## Submission
 
