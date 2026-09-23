@@ -36,6 +36,13 @@ college_data %>%
 I used summarise() and n() to determine the number of rows in the dataset. I also used pick(everything()) with ncol() to determine the number of columns. The dataset contains 7,175 rows and 12 columns.
 
 - Task 3: Use tidyverse to select INSTNM, SAT_AVG, and ADM_RATE
+```{r}
+college_selected <- college_data %>%
+  select(INSTNM, SAT_AVG, ADM_RATE)
+
+college_selected
+```
+I used the select() function from the tidyverse to keep only the INSTNM, SAT_AVG, and ADM_RATE variables from the dataset. The resulting dataset contains only these three columns.
 
 - Task 4: Create a scatterplot for SAT_AVG and ADM_RATE (Remove NA)
 
