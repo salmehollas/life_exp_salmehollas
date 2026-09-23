@@ -14,30 +14,26 @@ knitr::opts_chunk$set(echo       = TRUE,
 ggplot2::theme_set(ggplot2::theme_bw())
 ```
 
-## Instructions
-
-1.  Load the necessary **tidyverse** libraries.
-```{r}
-library(tidyverse)
-college_data <- read_csv("collegedata.csv")
-```
-I used read_csv() from the tidyverse to read the collegedata.csv file. I used a relative path because the data file is in the same folder as my Quarto file.
-
-2.  Answer each question in a separate R code chunk.
-3.  Provide a detailed explanation of your approach for each solution.
-4.  Render your R Markdown document to an HTML file.
-5.  Submit the rendered HTML file to Canvas.
 
 # Question:
 
 - Task 1: Read data using a relative path
-
-``` r
-Example:
-college_data <- read_csv("../data/collegedata.csv")
+```{r}
+library(tidyverse)
+college_data <- read_csv("../collegedata.csv")
 ```
 
+I used read_csv() from the tidyverse to read the collegedata.csv file. I used a relative path because the data file is in the same folder as my Quarto file.
+
 - Task 2:Determine rows and columns
+```{r}
+college_data %>%
+  summarise(rows = n())
+
+college_data %>%
+  summarise(columns = ncol(pick(everything())))
+```
+I used summarise() and n() to determine the number of rows in the dataset. I also used pick(everything()) with ncol() to determine the number of columns. The dataset contains 7,175 rows and 12 columns.
 
 - Task 3: Use tidyverse to select INSTNM, SAT_AVG, and ADM_RATE
 
