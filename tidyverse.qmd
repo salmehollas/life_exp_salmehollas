@@ -47,6 +47,7 @@ tribble( ~x,    ~y,    ~w,    ~z,
 # Calculate the mean of each column using map()
 map(dt, mean)
 ```
+
 I used the map() function to apply the mean() function to each column of dt. This gives the mean value for each variable in the data table.
 
 ## 1_b:
@@ -55,6 +56,7 @@ I used the map() function to apply the mean() function to each column of dt. Thi
 # Calculate the standard deviation of each column using map()
 map(dt, sd)
 ```
+
 I used map() function to apply the sd() function to each column of dt. This gives the standard deviation for each variable.
 
 ## 1_c:
@@ -63,6 +65,7 @@ I used map() function to apply the sd() function to each column of dt. This give
 # Calculate the square root of every value using map()
 map(dt, sqrt)
 ```
+
 I used map() to apply the sqrt() function to every value in each column of dt.
 
 ## 1_d:
@@ -70,6 +73,7 @@ I used map() to apply the sqrt() function to every value in each column of dt.
 ```{r}
 summary(dt)
 ```
+
 I used th esummary() function to calculate the minimum, 1st quartile, median, mean, 3rd quartile, and maximum for each column of dt.
 
 # Problem 2:
@@ -90,75 +94,198 @@ Write a function that uses a for loop that, for each iteration, randomly draws 5
 
   - **Now, let's solve the problem all in one step**
 
+```{r}
+# Function to generate 10,000 sample means
+calculate_means <- function() {
+  means <- vector("double", 10000)
+  
+  for (i in 1:10000) {
+    sample <- rexp(5, rate = 1)
+    means[i] <- mean(sample)
+  }
+  means
+}
+```
+
+```{r}
+means <- calculate_means()
+head(means)
+```
+
+```{r}
+# Create a data frame and plot the distribution of the sample means
+means_df <- tibble(means = means)
+
+ggplot(means_df, aes(x=means)) +
+  geom_histogram(binwidth = 0.05) +
+  labs(
+    x= "Sample Mean",
+    y = "Count",
+    title = "Distribution of Sample Means"
+  )
+```
+
+I stored the 10,000 sample means in a data frame and used a histogram to show their distribution.
+
 ## 2_a:
 
-- Repeat part 1 by using a `map_*()` function.
+```{r}
+# Generate 10,000 sample means using map()
+means_map <- map_dbl(1:10000, ~ mean(rexp(5, rate = 1)))
+head(means_map)
+```
+
+```{r}
+# Plot the distribution of the sample means
+means_map_df <- tibble(means = means_map)
+ggplot(means_map_df, aes(x=means)) +
+  geom_histogram(binwidth = 0.05) + 
+  labs(
+    x = "Sample Mean",
+    y = "Count",
+    title = "Distribution of Sample Means Using map()"
+  )
+```
+
+I used map_dbl() to generate 10,000 samples and calculate the mean of each sample. I then used a histogram to show the distribution of the sample means.
 
 ## 2_b:
 
-- Repeat part 1 by using the `replicate()` function.
+```{r}
+# Generate 10,000 sample means using replicate()
+means_replicate <- replicate(10000, mean(rexp(5, rate = 1)))
+head(means_replicate)
+```
+
+```{r}
+means_replicate_df <- tibble(means = means_replicate)
+ggplot(means_replicate_df, aes(x = means)) +
+  geom_histogram(binwidth = 0.05) +
+  labs(
+    x = "Sample Mean",
+    y = "Count",
+    title = "Distribution of Sample Means Using replicate()"
+  )
+```
+
+I used replicate() to repeat the sampling and mean calculation 10,000 times. I then used a histogram to show the distribution of the sample means.
 
 ## 2_c:
 
-- Use a another for loop that will print out plots for sample sizes of 5, 10, and 20 observations (instead of just 5).
+```{r}
+# Generate sample means for sample sizes 5, 10, and 20
+sample_sizes <- c(5, 10, 20)
+
+for (n in sample_sizes) {
+  means <- vector("double", 10000)
+  for (i in 1:10000) {
+    sample <- rexp(n, rate =1)
+    means[i] <- mean(sample)
+  }
+  
+  means_df <- tibble(means = means)
+  
+  print(
+    ggplot(means_df, aes(x=means)) +
+      geom_histogram(binwidth = 0.05) +
+      labs(
+        x="Sample Mean",
+        y= "Count",
+        title = paste("Sample Size =", n)
+      )
+  )
+}
+```
+
+I used a for loop to generate 10,000 sample means for sample sizes of 5, 10, and 20. The histograms show that the distribution of the means becomes narrower as the sample size increases.
 
 # Problem 3:
 
-- Use and show R coding to calculate the "standard deviation" for each variable of the data table `mtcars` using the “Special For Loop Method”.
-
-**Note:**
-
-- There are two methods. Please see a quick explanation for both methods in below:
-
-  - Method 1:
-
 ```{r}
-  multi_return <- function() {
-    my_list <- list("color" = "red", "size" = 20, "shape" = "round")
-    return(my_list) 
-  }
-```
+# Calculate the standard deviation of each variable in mtcars
+output <- vector("double", ncol(mtcars))
 
-```{r}
-a <- multi_return()
-a$color
-
-a<- multi_return()
-a$shape
-
-a<- multi_return()
-a$size
-```
-
-- Method 2. The "Special For Loop Method"
-
-```{r}
-#| eval: false
-output <- vector("double", ncol(df))  # 1. output (use appropriate data frame instead of df)
-for (i in seq_along(df)) {            # 2. sequence
-  output[[i]] <- median(df[[i]])      # 3. body
+for (i in seq_along(mtcars)) {
+  output[[i]] <- sd(mtcars[[i]])
 }
+
+names(output) <- names(mtcars)
 output
 ```
 
-- **Solution:** coding to calculate the "standard deviation" for each variable
+I used the special for loop method to calculate the standard deviation of each variable in mtcars. The loop goes through each column and applies the sd() function.
 
 # Problem 4:
 
-Generate a sequence of dates from **January 1, 2015** to **December 31, 2025**, spaced by every **two months**. Extract the **year**, **quarter**, and **ISO week number** for each date.
+```{r}
+# Generate dates every 2 months from 2015 to 2025
+dates <- tibble(
+  date = seq(
+    as.Date("2015-01-01"),
+    as.Date("2025-12-31"),
+    by = "2 months"
+  )
+) %>%
+  mutate(
+    year = year(date),
+    quarter = quarter(date),
+    iso_week = isoweek(date)
+  )
+
+dates
+```
+
+I created a sequence of dates every two months and used lubridate functions to extract the year, quarter, and ISO week number for each date.
 
 # Problem 5
 
-Given the following dates, compute the difference in **months** and **weeks** between each consecutive pair.
-
-``` r
+```{r}
 sample_dates <- c("2018-03-15", "2020-07-20", "2023-01-10", "2025-09-05")
+
+# Convert the date strings to Date format
+dates <- ymd(sample_dates)
+
+# Calculate the difference between consecutive dates
+date_differences <- tibble(
+  from = dates[-length(dates)],
+  to = dates[-1],
+  months = time_length(interval(from, to), "months"),
+  weeks = time_length(interval(from, to), "weeks")
+)
+
+date_differences
 ```
+
+I converted the date strings to Date format and calculated the difference between each consecutive pair of dates in months and weeks.
 
 # Problem 6
 
-Given a list of mixed date formats, use `map()` and `possibly()` from `purrr` to safely convert them to **Date** format and extract the **month name**.
-
-``` r
+```{r}
 date_strings <- list("2023-06-10", "2022/12/25", "15-Aug-2021", "InvalidDate")
+
+# Safely convert different date formats to Date
+safe_date <- possibly(
+  function(x) {
+    as.Date(parse_date_time(x, orders = c("ymd", "Y/m/d", "d-b-Y")))
+  },
+  otherwise = as.Date(NA)
+)
+
+# Convert the date strings
+months <- map_chr(
+  dates,
+  ~ as.character(month(.x, label = TRUE, abbr = FALSE))
+)
+
+# Extract the month name
+results <- tibble(
+  date_string = unlist(date_strings),
+  date = as.Date(unlist(dates)),
+  month = unlist(months)
+)
+
+
+results
 ```
+
+I used parse_date_time() to handle the different date formats and possibly() so that the invalid date would return NA instead of causing an error. I then used map() to convert the dates and extract the month names.
