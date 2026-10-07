@@ -48,7 +48,7 @@ tribble( ~x,    ~y,    ~w,    ~z,
 map(dt, mean)
 ```
 
-I used the map() function to apply the mean() function to each column of dt. This gives the mean value for each variable in the data table.
+I used the map() function to apply the mean() function to each column of dt. This gives the mean for each variable.
 
 ## 1_b:
 
@@ -57,7 +57,7 @@ I used the map() function to apply the mean() function to each column of dt. Thi
 map(dt, sd)
 ```
 
-I used map() function to apply the sd() function to each column of dt. This gives the standard deviation for each variable.
+I used the map() function to apply the sd() function to each column of dt. This gives the standard deviation for each variable.
 
 ## 1_c:
 
@@ -66,7 +66,7 @@ I used map() function to apply the sd() function to each column of dt. This give
 map(dt, sqrt)
 ```
 
-I used map() to apply the sqrt() function to every value in each column of dt.
+I used the map() to apply the sqrt() function to every value in each column of dt.
 
 ## 1_d:
 
@@ -74,7 +74,7 @@ I used map() to apply the sqrt() function to every value in each column of dt.
 summary(dt)
 ```
 
-I used th esummary() function to calculate the minimum, 1st quartile, median, mean, 3rd quartile, and maximum for each column of dt.
+I used the summary() function to calculate the minimum, 1st quartile, median, mean, 3rd quartile, and maximum for each column of dt.
 
 # Problem 2:
 
