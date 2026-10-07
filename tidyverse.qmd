@@ -256,7 +256,7 @@ date_differences <- tibble(
 date_differences
 ```
 
-I converted the date strings to Date format and calculated the difference between each consecutive pair of dates in months and weeks.
+I converted the date strings to Date format and calculated the difference in months and weeks between each consecutive pair of dates.
 
 # Problem 6
 
