@@ -1,0 +1,68 @@
+---
+title: "assignment6"
+author: "Salme Hollas"
+format: html
+editor: visual
+---
+
+
+# Exploring Joyful Language in Jane Austen's Emma using Tidytext
+
+## 1. Load libraries
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  fig.align = "center",
+  fig.height = 3,
+  fig.width = 5
+)
+
+ggplot2::theme_set(
+  ggplot2::theme_bw() +
+    ggplot2::theme(
+      strip.background = ggplot2::element_rect(fill = "white")
+    )
+)
+```
+
+```{r libraries, message=FALSE}
+# Load the packages
+library(tidyverse)
+library(tidytext)
+library(janeaustenr)
+library(wordcloud)
+library(RColorBrewer)
+```
+
+## 2. Data Preparation
+
+First, we load the Jane Austen books and prepare the data. We create a line number and chapter number for each line of text. Then we select Emma.
+
+```{r data-preparation}
+# Load Jane Austen's books
+austen_data <- austen_books()
+
+# Add line numbers and chapter numbers
+austen_data <- austen_data %>%
+  group_by(book) %>%
+  mutate(
+    linenumber = row_number(),
+    chapter = cumsum(
+      str_detect(
+        text,
+        regex("^chapter\\s+[0-9ivxlc]+", ignore_case = TRUE)
+      )
+    )
+  ) %>%
+  ungroup()
+
+# Select Emma
+emma <- austen_data %>%
+  filter(book == "Emma")
+
+# Show the first few rows
+head(emma)
+```
+
+The `austen_books()` function loads Jane Austen's books. We group the data by book and identify chapter headings using regular expressions. The line number and chapter number are added as new columns.
