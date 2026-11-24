@@ -139,3 +139,58 @@ wordcloud(
 The word cloud provides another way to visualize the results. Words that appear more frequently are displayed in larger sizes.
 
 
+
+## 5. AFINN Sentiment Analysis
+
+```{r afinn-analysis}
+# Load the AFINN lexicon and select positive words
+afinn_positive <- get_sentiments("afinn") %>%
+  filter(value >= 1)
+
+# Match positive words with words from Emma
+emma_afinn <- emma_words %>%
+  inner_join(afinn_positive, by = "word")
+
+# Count the frequency of each word
+afinn_frequency <- emma_afinn %>%
+  count(word, sort = TRUE) %>%
+  filter(n > 50)
+
+# Display the most frequent positive words
+afinn_frequency
+```
+
+Select words with positive AFINN scores and match them with the words in *Emma*. Then count how often each word appears and keep words with a frequency greater than 50.
+
+### AFINN Bar Chart
+
+```{r afinn-bar-chart}
+# Create a bar chart of frequent positive words
+ggplot(afinn_frequency, aes(x = reorder(word, n), y = n)) +
+  geom_col(fill = "lightcoral") +
+  coord_flip() +
+  labs(
+    title = "Frequent Positive Words in Emma (AFINN)",
+    x = "Word",
+    y = "Frequency"
+  )
+```
+
+The bar chart shows the frequency of positive words identified by the AFINN lexicon.
+
+### AFINN Word Cloud
+
+```{r afinn-word-cloud}
+# Create a word cloud using AFINN positive words
+wordcloud(
+  words = afinn_frequency$word,
+  freq = afinn_frequency$n,
+  max.words = 100,
+  random.order = FALSE,
+  colors = brewer.pal(8, "Dark2")
+)
+```
+
+The word cloud highlights the most frequently occurring positive words. Larger words represent higher frequencies.
+
+
