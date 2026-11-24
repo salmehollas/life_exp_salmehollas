@@ -81,3 +81,61 @@ head(emma_words)
 ```
 
 Each row now represents one word from the novel. The words are converted to lowercase automatically, making it easier to match them with the sentiment lexicons.
+
+
+
+## 4. NRC Sentiment Analysis
+
+The NRC sentiment lexicon classifies words into different emotions. This analysis focuse on words associated with joy.
+
+```{r nrc-analysis}
+# Load the NRC lexicon and select joyful words
+nrc_joy <- get_sentiments("nrc") %>%
+  filter(sentiment == "joy")
+
+# Match joyful words with words from Emma
+emma_nrc <- emma_words %>%
+  inner_join(nrc_joy, by = "word")
+
+# Count the frequency of each word
+nrc_frequency <- emma_nrc %>%
+  count(word, sort = TRUE) %>%
+  filter(n > 50)
+
+# Display the most frequent joyful words
+nrc_frequency
+```
+
+
+### NRC Bar Chart
+
+```{r nrc-bar-chart}
+# Create a bar chart of frequent joyful words
+ggplot(nrc_frequency, aes(x = reorder(word, n), y = n)) +
+  geom_col(fill = "darkseagreen3") +
+  coord_flip() +
+  labs(
+    title = "Frequent Joy Words in Emma (NRC)",
+    x = "Word",
+    y = "Frequency"
+  )
+```
+
+The bar chart displays the most frequent joyful words identified by the NRC lexicon. The words are ordered by frequency to make comparisons easier.
+
+### NRC Word Cloud
+
+```{r nrc-word-cloud}
+# Create a word cloud using NRC joyful words
+wordcloud(
+  words = nrc_frequency$word,
+  freq = nrc_frequency$n,
+  max.words = 100,
+  random.order = FALSE,
+  colors = brewer.pal(8, "Dark2")
+)
+```
+
+The word cloud provides another way to visualize the results. Words that appear more frequently are displayed in larger sizes.
+
+
