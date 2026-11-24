@@ -5,7 +5,6 @@ format: html
 editor: visual
 ---
 
-
 # Exploring Joyful Language in Jane Austen's Emma using Tidytext
 
 ## 1. Load libraries
@@ -66,3 +65,19 @@ head(emma)
 ```
 
 The `austen_books()` function loads Jane Austen's books. We group the data by book and identify chapter headings using regular expressions. The line number and chapter number are added as new columns.
+
+
+## 3. Tokenization
+
+Use `unnest_tokens()` to separate the text into individual words. This allows to compare the words in the novel with the sentiment lexicons.
+
+```{r tokenization}
+# Separate the text into individual words
+emma_words <- emma %>%
+  unnest_tokens(word, text)
+
+# Display the first few words
+head(emma_words)
+```
+
+Each row now represents one word from the novel. The words are converted to lowercase automatically, making it easier to match them with the sentiment lexicons.
