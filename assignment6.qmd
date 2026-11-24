@@ -194,3 +194,57 @@ wordcloud(
 The word cloud highlights the most frequently occurring positive words. Larger words represent higher frequencies.
 
 
+## 6. BING Sentiment Analysis
+
+The BING lexicon classifies words as either positive or negative. For this analysis, select only positive words.
+
+```{r bing-analysis}
+# Load the BING lexicon and select positive words
+bing_positive <- get_sentiments("bing") %>%
+  filter(sentiment == "positive")
+
+# Match positive words with words from Emma
+emma_bing <- emma_words %>%
+  inner_join(bing_positive, by = "word")
+
+# Count the frequency of each word
+bing_frequency <- emma_bing %>%
+  count(word, sort = TRUE) %>%
+  filter(n > 50)
+
+# Display the most frequent positive words
+bing_frequency
+```
+
+Select words classified as positive by the BING lexicon and match them with the words in *Emma*. Then calculate their frequencies and keep words appearing more than 50 times.
+
+### BING Bar Chart
+
+```{r bing-bar-chart}
+# Create a bar chart of frequent positive words
+ggplot(bing_frequency, aes(x = reorder(word, n), y = n)) +
+  geom_col(fill = "skyblue3") +
+  coord_flip() +
+  labs(
+    title = "Frequent Positive Words in Emma (BING)",
+    x = "Word",
+    y = "Frequency"
+  )
+```
+
+The bar chart displays the most frequently occurring positive words identified by the BING lexicon.
+
+### BING Word Cloud
+
+```{r bing-word-cloud}
+# Create a word cloud using BING positive words
+wordcloud(
+  words = bing_frequency$word,
+  freq = bing_frequency$n,
+  max.words = 100,
+  random.order = FALSE,
+  colors = brewer.pal(8, "Dark2")
+)
+```
+
+The word cloud visualizes the most frequent positive words identified by BING. Larger words represent words that appear more often in the novel.
